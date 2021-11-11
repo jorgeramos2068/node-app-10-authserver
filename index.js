@@ -11,6 +11,9 @@ app.use(cors());
 // Reading and parsing of body
 app.use(express.json());
 
+// Public folder
+app.use(express.static('public'));
+
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 
