@@ -28,6 +28,7 @@ const createUser = async (req, res = response) => {
       ok: true,
       uid: user.id,
       name,
+      email,
       token,
     });
   } catch (error) {
@@ -62,6 +63,7 @@ const login = async (req, res = response) => {
       ok: true,
       uid: userCheck.id,
       name: userCheck.name,
+      email: userCheck.email,
       token,
     });
   } catch (error) {
@@ -74,12 +76,20 @@ const login = async (req, res = response) => {
 };
 
 const renew = async (req, res = response) => {
-  const { uid, name } = req;
-  const token = await generateJWT(uid, name);
+  const { uid } = req;
+  const dbUser = await User.findById(uid);
+  if (!dbUser) {
+    return res.status(400).json({
+      ok: false,
+      msg: 'There was an error while authenticating the token',
+    });
+  }
+  const token = await generateJWT(uid, dbUser.name);
   return res.json({
     ok: true,
     uid,
-    name,
+    name: dbUser.name,
+    email: dbUser.email,
     token,
   });
 };

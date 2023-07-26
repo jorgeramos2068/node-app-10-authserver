@@ -11,9 +11,8 @@ const validateJWT = (req, res = response, next) => {
   }
   // Validate token
   try {
-    const { uid, name } = jwt.verify(token, process.env.SECRET_JWT_SEED);
+    const { uid } = jwt.verify(token, process.env.SECRET_JWT_SEED);
     req.uid = uid;
-    req.name = name;
   } catch (error) {
     console.log('Error in token', error);
     return res.status(401).json({
